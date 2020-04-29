@@ -40,55 +40,55 @@
 
 #ifdef STACK_PAINT
 
-        //Stack checking
-        //http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=52249
-        extern uint8_t __bss_end;
-        extern uint8_t __stack;
+	//Stack checking
+	//http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=52249
+	extern uint8_t __bss_end;
+	extern uint8_t __stack;
 
-        #define STACK_CANARY 0xc5
+	#define STACK_CANARY 0xc5
 
-        void StackPaint(void) __attribute__ ((naked)) __attribute__ ((section (".init1")));
+	void StackPaint(void) __attribute__ ((naked)) __attribute__ ((section (".init1")));
 
-        void StackPaint(void)
-        {
-                #if 0
-                        uint8_t *p = &__bss_end;
+	void StackPaint(void)
+	{
+		#if 0
+			uint8_t *p = &__bss_end;
 
-                        while(p <= &__stack)
-                        {
-                                *p = STACK_CANARY;
-                                p++;
-                        }
-                #else
-                        __asm volatile ("    ldi r30,lo8(__bss_end)\n"
-                                        "    ldi r31,hi8(__bss_end)\n"
-                                        "    ldi r24,lo8(0xc5)\n" /* STACK_CANARY = 0xc5 */
-                                        "    ldi r25,hi8(__stack)\n"
-                                        "    rjmp .cmp\n"
-                                        ".loop:\n"
-                                        "    st Z+,r24\n"
-                                        ".cmp:\n"
-                                        "    cpi r30,lo8(__stack)\n"
-                                        "    cpc r31,r25\n"
-                                        "    brlo .loop\n"
-                                        "    breq .loop"::);
-                #endif
-        }
+			while(p <= &__stack)
+			{
+					*p = STACK_CANARY;
+					p++;
+			}
+		#else
+			__asm volatile ("    ldi r30,lo8(__bss_end)\n"
+							"    ldi r31,hi8(__bss_end)\n"
+							"    ldi r24,lo8(0xc5)\n" /* STACK_CANARY = 0xc5 */
+							"    ldi r25,hi8(__stack)\n"
+							"    rjmp .cmp\n"
+							".loop:\n"
+							"    st Z+,r24\n"
+							".cmp:\n"
+							"    cpi r30,lo8(__stack)\n"
+							"    cpc r31,r25\n"
+							"    brlo .loop\n"
+							"    breq .loop"::);
+		#endif
+	}
 
 
-        uint16_t StackCount(void)
-        {
-                const uint8_t *p = &__bss_end;
-                uint16_t       c = 0;
+	uint16_t StackCount(void)
+	{
+		const uint8_t *p = &__bss_end;
+		uint16_t       c = 0;
 
-                while(*p == STACK_CANARY && p <= &__stack)
-                {
-                        p++;
-                        c++;
-                }
+		while(*p == STACK_CANARY && p <= &__stack)
+		{
+			p++;
+			c++;
+		}
 
-                return c;
-        }
+		return c;
+	}
 
 #endif
 
@@ -96,7 +96,7 @@
 void reset(bool hard_reset) {
 	ATOMIC_BLOCK(ATOMIC_FORCEON) {
 
-	     DEBUG_VALUE(DEBUG_MAIN | 0x03);
+		DEBUG_VALUE(DEBUG_MAIN | 0x03);
 
 	//	bool brown_out = false;
 	//	uint8_t resetFlags = MCUSR & 0x0f;
@@ -105,14 +105,14 @@ void reset(bool hard_reset) {
 	//		brown_out = true;
 	//	}
 
-        // clear watch dog timer and re-enable
+		// clear watch dog timer and re-enable
 		if(hard_reset)
 		{
-		     // ATODO: remove disable
-		     wdt_disable();
-		     MCUSR = 0x0;
-		     wdt_enable(WDTO_4S); // 8 seconds is max timeout
-		     DEBUG_VALUE(DEBUG_MAIN | 0x04);
+			// ATODO: remove disable
+			wdt_disable();
+			MCUSR = 0x0;
+			wdt_enable(WDTO_4S); // 8 seconds is max timeout
+			DEBUG_VALUE(DEBUG_MAIN | 0x04);
 		}
 
 		// initialize major classes
@@ -157,7 +157,7 @@ void reset(bool hard_reset) {
 int main() {
 
 #ifdef ERASE_EEPROM_ON_EVERY_BOOT
-        eeprom::erase();
+	eeprom::erase();
 	return 0;
 #endif
 
@@ -187,7 +187,7 @@ int main() {
 	// enabled).
 
 	board.init();
-        DEBUG_VALUE(DEBUG_MAIN | 0x02);
+	DEBUG_VALUE(DEBUG_MAIN | 0x02);
 
 	reset(true);
 	DEBUG_VALUE(DEBUG_MAIN | 0x0D);
@@ -200,8 +200,8 @@ int main() {
 		command::runCommandSlice();
 		// Motherboard slice
 		board.runMotherboardSlice();
-                // Stepper slice
-                steppers::runSteppersSlice();
+		// Stepper slice
+		steppers::runSteppersSlice();
 
 		//Alert if SRAM/stack has been corrupted by running out of SRAM
 #if defined(STACK_PAINT) && defined(DEBUG_SRAM_MONITOR)

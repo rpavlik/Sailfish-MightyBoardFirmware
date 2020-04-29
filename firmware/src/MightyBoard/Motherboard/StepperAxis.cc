@@ -131,10 +131,10 @@ void stepperAxisInit(bool hard_reset) {
 			stepperAxis[i].invert_axis = (axes_invert & (1<<i)) != 0;
 
 			stepperAxis[i].steps_per_mm = (float)eeprom::getEeprom32(eeprom_offsets::AXIS_STEPS_PER_MM + i * sizeof(uint32_t),
-								   	         replicator_axis_steps_per_mm::axis_steps_per_mm[i]) / 1000000.0;
+								   			 replicator_axis_steps_per_mm::axis_steps_per_mm[i]) / 1000000.0;
 
 			stepperAxis[i].max_feedrate = FTOFP((float)eeprom::getEeprom32(eeprom_offsets::AXIS_MAX_FEEDRATES + i * sizeof(uint32_t),
-										       replicator_axis_max_feedrates::axis_max_feedrates[i]) / 60.0);
+											   replicator_axis_max_feedrates::axis_max_feedrates[i]) / 60.0);
 
 			// max jogging speed for an axis is the min count of microseconds per step
 			// min us/step = (1000000 us/s) / [ (max mm/s) * (axis steps/mm) ]
@@ -143,7 +143,7 @@ void stepperAxisInit(bool hard_reset) {
 
 			//Read the axis lengths in
 			int32_t length = (int32_t)((float)eeprom::getEeprom32(eeprom_offsets::AXIS_LENGTHS + i * sizeof(uint32_t), replicator_axis_lengths::axis_lengths[i]) *
-						    stepperAxis[i].steps_per_mm);
+							stepperAxis[i].steps_per_mm);
 			int32_t *axisMin = &stepperAxis[i].min_axis_steps_limit;
 			int32_t *axisMax = &stepperAxis[i].max_axis_steps_limit;
 
@@ -199,7 +199,7 @@ void stepperAxisInit(bool hard_reset) {
 			dda_position[i]	= 0;
 
 			stepperAxis[i].hasHomed		 = false;
-        		stepperAxis[i].hasDefinePosition = false;
+			stepperAxis[i].hasDefinePosition = false;
 		}
 
 		//Setup the higher level stuff functionality / create the ddas
@@ -220,7 +220,7 @@ void stepperAxisInit(bool hard_reset) {
 #if defined(PSTOP_SUPPORT)
 #if defined(PSTOP_PORT)
 		// PSTOP port is input and ensure pull up resistor is deactivated
-                if ( pstop_enabled ) {
+		if ( pstop_enabled ) {
 			PSTOP_PORT.setDirection(false);
 			PSTOP_PORT.setValue(false);
 		}
@@ -239,24 +239,24 @@ void stepperAxisInit(bool hard_reset) {
 /// Returns the steps per mm for the given axis
 float stepperAxisStepsPerMM(uint8_t axis)
 {
-        return stepperAxis[axis].steps_per_mm;
+	return stepperAxis[axis].steps_per_mm;
 }
 
 /// Convert steps to mm's, as accurate as floating point is
 float stepperAxisStepsToMM(int32_t steps, uint8_t axis) {
-        return (float)steps / stepperAxis[axis].steps_per_mm;
+	return (float)steps / stepperAxis[axis].steps_per_mm;
 }
 
 //Convert mm's to steps for the given axis
 //Accurate to 1/1000 mm
 int32_t stepperAxisMMToSteps(float mm, uint8_t axis) {
-        //Multiply mm by 1000 to avoid floating point errors
-        int64_t intmm = (int64_t)(mm * 1000.0);
+	//Multiply mm by 1000 to avoid floating point errors
+	int64_t intmm = (int64_t)(mm * 1000.0);
 
-        //Calculate the number of steps
-        int64_t ret = intmm * (int64_t)stepperAxis[axis].steps_per_mm;
+	//Calculate the number of steps
+	int64_t ret = intmm * (int64_t)stepperAxis[axis].steps_per_mm;
 
-        ret /= 1000;
+	ret /= 1000;
 
-        return (int32_t)ret;
+	return (int32_t)ret;
 }
