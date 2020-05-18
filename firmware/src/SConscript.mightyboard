@@ -53,6 +53,7 @@ def filtered_glob_keep(env, pattern, keep=[], ondisk=True, source=False, strings
 
 # Platform parameter
 platform = ARGUMENTS.get('platform','mighty_one')
+print('platform=' + platform)
 
 if not ( platform in platforms ):
 	print("Platform "+platform+" is not currently supported")
@@ -102,6 +103,8 @@ alt_uart = ARGUMENTS.get('alt_uart','0')
 
 # MAX31855
 max31855 = ARGUMENTS.get('max31855','')
+
+has_trinamic = ARGUMENTS.get('has_trinamic')
 
 # Broken SD
 broken_str = ''
@@ -164,7 +167,8 @@ flags=[
 	'-ffunction-sections',
 	'-fdata-sections',
 	'-fshort-enums',
-	'-mmcu=' + features.get('mcu', 'atmega1280') ]
+	'-mmcu=' + features.get('mcu', 'atmega1280'),
+   '-std=c++14']
 
 #if platform.startswith('azteeg'):
 #   flags.append('-mrelax');
@@ -216,7 +220,7 @@ else:
 
 target_name = platform+max31855+"_v"+str(int(version[0]))+"."+str(int(version[1]))+"."+str(int(version[2]))+broken_str
 
-include_paths = ['MightyBoard/shared', 'MightyBoard/Motherboard', 'MightyBoard/shared/locale', 'MightyBoard/Motherboard/avrfix', 'MightyBoard/Motherboard/boards/%s' %board_directory, '.']
+include_paths = ['MightyBoard/shared', 'MightyBoard/Motherboard', 'MightyBoard/shared/locale', 'MightyBoard/Motherboard/avrfix', 'MightyBoard/Motherboard/boards/%s' %board_directory, '.', 'MightyBoard/TMC2130Stepper-master/src']
 
 if broken_sd == '1':
    flags.append('-DBROKEN_SD')
@@ -252,6 +256,12 @@ if (alt_uart == '1'):
 
 if (zlevel == '1'):
    flags.append('-DPSTOP_ZMIN_LEVEL')
+
+if has_trinamic:
+   flags.append('-DHAS_TRINAMIC')
+   include_paths.append('MightyBoard/TMC2130Stepper-master/src')
+   for axis in has_trinamic:
+      flags.append('-DTRINAMIC_' + axis.upper())
 
 if (os.environ.has_key('BUILD_NAME')):
    flags.append('-DBUILD_NAME=' + os.environ['BUILD_NAME'])
@@ -302,6 +312,7 @@ objs = [ env.Object(env.GlobOmit('*.cc', squeeze_srcs) +
                     env.GlobOmit('MightyBoard/Motherboard/boards/%s/*.cc' % board_directory, squeeze_srcs) +
                     env.GlobOmit('MightyBoard/Motherboard/lib_sd/*.c', squeeze_srcs) +
                     env.GlobOmit('MightyBoard/shared/*.cc', squeeze_srcs) +
+                    env.GlobOmit('MightyBoard/TMC2130Stepper-master/src/source/*.cpp', squeeze_srcs) +
                     env.GlobOmit('MightyBoard/shared/locale/%s' % localefile, squeeze_srcs) +
                     env.GlobOmit('MightyBoard/Motherboard/avrfix/*.c', squeeze_srcs)),
          env_sqz.Object(env_sqz.GlobKeep('*.cc', squeeze_srcs) +

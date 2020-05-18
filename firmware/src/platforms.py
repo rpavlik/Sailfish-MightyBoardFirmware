@@ -298,6 +298,23 @@ platforms = {
                         'EEPROM_MENU_ENABLE', 'RGB_LED_MENU', 'S3G_CAPTURE_2_SD=1', 'SD_RAW_SDHC=1' ]
         },
 
+    'mighty_twox_tmc' :
+        { 'mcu' : 'atmega1280',
+          'programmer' : 'stk500v1',
+          'board_directory' : 'mighty_two',
+          'has_trinamic': ['x', 'y'],
+          'defines' : [ 'BUILD_STATS', 'HAS_RGB_LED', 'COOLING_FAN_PWM',
+                        'PLATFORM_SPLASH1_MSG=\\\"  Sailfish Rep 2X   \\\"',
+                        'PLATFORM_TOOLHEAD_OFFSET_X=3100',
+                        'PLATFORM_THE_REPLICATOR_STR=\\\"Replicator 2X\\\"',
+                        'PLATFORM_MACHINE_ID=0xB017',
+                        'PLATFORM_X_OFFSET_STEPS=13463L',
+                        'PLATFORM_Y_OFFSET_STEPS=6643L',
+                        'PLATFORM_AXIS_LENGTHS={246L, 152L, 155L, 100000L, 100000L}',
+                        'PLATFORM_AXIS_STEPS_PER_MM={88573186, 88573186, 400000000, 96275202, 96275202}',
+                        'EEPROM_MENU_ENABLE', 'RGB_LED_MENU', 'S3G_CAPTURE_2_SD=1', 'SD_RAW_SDHC=1',
+                        'PLATFORM_X_TMC2130', 'PLATFORM_Y_TMC2130']
+        },
     'mighty_twox-2560' :
         { 'mcu' : 'atmega2560',
           'programmer' : 'stk500v2',

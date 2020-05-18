@@ -29,7 +29,7 @@ void SW_SPIClass::setPins(uint16_t sw_mosi_pin, uint16_t sw_miso_pin, uint16_t s
   miso_pin = sw_miso_pin;
   sck_pin = sw_sck_pin;
 }
-
+#if 0
 void SW_SPIClass::init() {
   pinMode(mosi_pin, OUTPUT);
   pinMode(sck_pin, OUTPUT);
@@ -81,3 +81,4 @@ uint16_t SW_SPIClass::transfer16(uint16_t data) {
   returnVal |= transfer(data&0xFF) & 0xFF;
   return returnVal;
 }
+#endif

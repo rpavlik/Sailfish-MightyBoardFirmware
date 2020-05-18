@@ -1,9 +1,11 @@
 #pragma once
 
 //#define TMC2130DEBUG
+#ifdef ARDUINO
 #include <Arduino.h>
-#include <stdint.h>
 #include <SPI.h>
+#endif
+#include <stdint.h>
 
 #define TMC2130STEPPER_VERSION 0x020501 // v2.5.1
 

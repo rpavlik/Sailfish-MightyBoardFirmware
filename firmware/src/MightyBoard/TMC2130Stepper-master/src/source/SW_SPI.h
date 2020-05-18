@@ -1,7 +1,8 @@
 #pragma once
-
-#include <Arduino.h>
-
+#include <stdint.h>
+constexpr uint8_t LSBFIRST=0;
+constexpr uint8_t MSBFIRST=1;
+using byte = uint8_t;
 class SW_SPIClass {
 	public:
 		void setPins(uint16_t sw_mosi_pin, uint16_t sw_miso_pin, uint16_t sw_sck_pin);
